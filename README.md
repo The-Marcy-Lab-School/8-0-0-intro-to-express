@@ -1,7 +1,6 @@
 # Intro to Express
 
 - [Terms](#terms)
-- [Discussion Question](#discussion-question)
 - [Overview](#overview)
   - [Listening and Routing](#listening-and-routing)
 - [Anatomy of a Controller](#anatomy-of-a-controller)
@@ -26,7 +25,16 @@ nodemon index.js
 ```
 
 
-## Discussion Question
+## Overview
+
+So how do the client and server interact?
+
+1. Client sends a **request** to the server
+1. Server receives the request and **routes** it to the proper **controller**
+1. The controller parses the request and sends a **response**
+1. The client receives the response and renders the data!
+  
+![](./images/express-diagram-simple.svg)
 
 **<details><summary style="color: purple">Q: What are the responsibilities of a client?</summary>**
 
@@ -44,19 +52,6 @@ nodemon index.js
 - Sending data to a client (e.g. weather API)
 
 </details><br>
-
-## Overview
-
-So how do the client and server interact?
-
-1. Client sends a **request** to the server
-1. Server receives the request and **routes** it to the proper **controller**
-1. The controller parses the request and sends a **response**
-1. The client receives the response and renders the data!
-  
-![](./images/express-diagram-simple.svg)
-
-**Q: Visit https://developers.giphy.com/explorer/ and see what endpoints are available** (If you don't already have a developer account, make one and create an App to get an API key)
 
 ### Listening and Routing
 
