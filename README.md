@@ -6,7 +6,6 @@
 - [Anatomy of a Controller](#anatomy-of-a-controller)
 - [Host \& Ports](#host--ports)
 - [Challenge](#challenge)
-  - [Example:](#example)
 
 ## Terms
 
@@ -147,32 +146,6 @@ It is entirely up to *you* to decide which endpoints your server makes available
 
 When you've built your server, visit http://localhost:8080 (or whatever port number you chose) and test out your server!
 
-When you're done, push your code to github and follow these steps to deploy using Render.
+When you're done, push your code to github and [follow these steps to deploy using Render](https://github.com/The-Marcy-Lab-School/render-deployment-instructions).
 
-### Example:
-
-Use this as a template!
-
-```js
-const express = require('express');
-const app = express();
-
-// these serve HTML
-const serveIndex = (req, res, next) => res.sendFile(__dirname + '/index.html');
-const serveAbout = (req, res, next) => res.send('<h1>About</h1>');
-
-// these serve data
-const serveData = (req, res, next) => res.send([{ name: 'ben' }, { name: 'zo' }]);
-const serveHello = (req, res, next) => res.send('hello');
-
-// these serve HTML
-app.get('/', serveIndex);
-app.get('/about', serveAbout);
-
-// these serve data
-app.get('/api/hello', serveHello);
-app.get('/api/data', serveData);
-
-const port = 8080; // choose a port!
-app.listen(port, () => console.log(`listening at http://localhost:${port}`)); 
-```
+[Here is an example of a deployed server!](https://github.com/benspector-mls/first-express-server-f23-test)
