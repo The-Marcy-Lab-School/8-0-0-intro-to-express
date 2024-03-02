@@ -1,5 +1,5 @@
 // Imports:
-const data = require('./db/data.js'); // our mock data
+const gifs = require('./gifs.json'); // our mock data
 const express = require('express');   // used to configure the express server
 
 // The `app` object configures the server
@@ -8,7 +8,7 @@ const app = express();
 // Controllers:
 const serveIndex = (req, res, next) => res.sendFile(__dirname + '/index.html');
 const serveAbout = (req, res, next) => res.send('<h1>About</h1>');
-const serveData = (req, res, next) => res.send(data);
+const serveData = (req, res, next) => res.send(gifs);
 const serveHello = (req, res, next) => res.send('hello');
 
 // Routes:
