@@ -129,7 +129,8 @@ Just pick one that isn't being used!
 ## Challenge
 
 Setup:
-* Create a new repo in GitHub called `first-express-server` and clone it down
+* Create a new repo in GitHub called `first-express-server`. Make sure to add a `.gitignore` template with `Node` selected.
+* Clone it down
 * Create a new folder called `server` and `cd` into it
 * Run `npm i express`
 * Run `npm i -g nodemon`
