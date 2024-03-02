@@ -1,35 +1,40 @@
 # Intro to Express
 
+Welcome to the world of backend! In this lesson, we're going to learn the basics of Express and build and deploy a simple server application.
+
 - [Terms](#terms)
+- [Setup](#setup)
 - [Overview](#overview)
-  - [Listening and Routing](#listening-and-routing)
-- [Anatomy of a Controller](#anatomy-of-a-controller)
+  - [The Express `app`](#the-express-app)
+- [Endpoints and Controllers](#endpoints-and-controllers)
 - [Host \& Ports](#host--ports)
 - [Challenge](#challenge)
 
 ## Terms
 
-* **Server Application** — an application that a client can send requests to over the internet. 
+* **Server Application** — an application that listens for requests and sends responses.
 * **Host** and **Port** - the address of a server application
-* **Endpoint** — a specific URL path of a server that clients can "hit" (send requests to) to create/read/update/delete data. For example: `'/api/data'` or `/api/users/:id` 
-* **Express `app`** — An object that "listens" for requests and "routes" to the appropriate controller.
+* **Endpoint** — a specific URL path of a server that clients can "hit" (send requests to) to create/read/update/delete data. For example: `/api/data` or `/api/users/:id` 
+* **Express `app`** — an object that "listens" for requests and "routes" to the appropriate controller.
 * **Controller** — a callback function that parses a request and sends a response for a particular endpoint
 
-`nodemon index.js` will re-run the `index.js` file when there is a file change
 
-```
-npm i -g nodemon
-
-nodemon index.js
-```
+## Setup
+* Create a new repo in GitHub called `first-express-server`. Make sure to add a `.gitignore` template with `Node` selected. Include a **README.md** file where you can take notes.
+* Clone it down
+* Create a new folder called `server` and `cd` into it
+* Run `npm i express`
+* Run `npm i -g nodemon`
+* Create a `index.js` file
+* Run `nodemon index.js` to run your file. Each change you make will cause the file to re-run. <kbd>Ctrl + C</kdb> to turn off the server.
 
 
 ## Overview
 
 So how do the client and server interact?
 
-1. Client sends a **request** to the server
-1. Server receives the request and **routes** it to the proper **controller**
+1. A client sends a **request** to the server
+1. The server receives the request and **routes** it to the proper **controller**
 1. The controller parses the request and sends a **response**
 1. The client receives the response and renders the data!
   
@@ -42,7 +47,7 @@ So how do the client and server interact?
 - Providing information to a server (post/patch/delete requests)
 - Reading data received from a server
 
-</details><br>
+</details>
 
 **<details><summary style="color: purple">Q: What are the responsibilities of a server?</summary>**
 
@@ -50,55 +55,101 @@ So how do the client and server interact?
 - Parsing the information it receives
 - Sending data to a client (e.g. weather API)
 
-</details><br>
+</details>
 
-### Listening and Routing
+### The Express `app`
 
 The main export of Express is the `express` function which creates an object, often named `app` or `server`.
 
-This `app` object is the hub of the server application. It "listens" and "routes" incoming requests to controllers.
+```js
+const express = require('express');
+const app = express();
+```
+
+This `app` object is the hub of the server application. It will:
+* **Listen:** Wait for incoming requests and...
+* **Route:** Direct each request to a **controller** based on the specific **endpoint** of the request
+
+Here is a simple example. For now, just focus on the high-level structure of the application. Look for **controllers**, **endpoints**, and where the app "listens".
 
 ```js
 const express = require('express');
 const app = express();
 
 // controllers
-const serveIndex = (req, res, next) => res.sendFile(__dirname + '/index.html');
-const serveAbout = (req, res, next) => res.send('<h1>About</h1>');
-const serveData = (req, res, next) => res.send([ { name: 'ben' }, { name: 'zo' }]);
-const serveHello = (req, res, next) => res.send('hello');
+const serveIndex = (req, res, next) => {
+  res.sendFile(__dirname + '/index.html');
+}
+const serveAbout = (req, res, next) => {
+  res.send('<h1>About</h1>');
+}
+const serveData = (req, res, next) => {
+  res.send([ { name: 'ben' }, { name: 'zo' }]);
+}
+const serveHello = (req, res, next) => {
+  res.send('hello');
+}
 
-// routes
+// endpoints
 app.get('/', serveIndex);
 app.get('/about', serveAbout);
 app.get('/api/hello', serveHello);
 app.get('/api/data', serveData);
 
+// listen
 const port = 8080;
 app.listen(port, () => console.log(`listening at http://localhost:${port}`)); 
 ```
 
-* `8080` is the port which means that when we run this program on our `localhost`, the server is accessible at the URL `http://localhost:8080`. It can really be whatever you want but `8080` is a common choice.
-* `app.get(endpoint, controller)` defines which `controller` will be invoked for the specified `endpoint`.  
-* A controller is a callback function that parses a request and sends a response. It will be invoked by the `app` when the associated path is hit.
+* `const app = express()` creates the Express `app` object
+* A **controller** is a callback function that parses a request and sends a response. It will be invoked by the `app` when the associated path is hit.
+* `app.get(endpoint, controller)` defines which `controller` will be invoked for the specified `endpoint`.
+* `app.listen(port, callback)` "starts" the server application. Since the application is running locally, it will be accessible at `http://localhost:8080` where `8080` is the port. All of the endpoints above are extensions of this host and port.
 
-## Anatomy of a Controller
+Let's look closer at how to make a controller.
 
-Controllers are callbacks. They are invoked by the `app` and are given three values:
-* `req` — an object with data about the request
+## Endpoints and Controllers
+
+Controllers are callbacks invoked by the `app` when the associated endpoint is hit. They are ALWAYS invoked with three values:
+* `req` — an object with data about the incoming request
 * `res` — an object with functions for sending a response
 * `next` — a function to execute the next controller (we'll learn more about this soon)
 
 ```js
-const serveIndex = (req, res, next) => res.sendFile(__dirname + '/index.html');
-const serveAbout = (req, res, next) => res.send('<h1>About</h1>');
-const serveData = (req, res, next) => res.send([ { name: 'ben' }, { name: 'zo' }]);
-const serveHello = (req, res, next) => res.send('hello');
+// controllers
+const serveIndex = (req, res, next) => {
+  res.sendFile(__dirname + '/index.html');
+}
+const serveAbout = (req, res, next) => {
+  res.send('<h1>About</h1>');
+}
+const serveData = (req, res, next) => {
+  res.send([ { name: 'ben' }, { name: 'zo' }]);
+}
+const serveHello = (req, res, next) => {
+  res.send('hello');
+}
+
+// endpoints
+app.get('/', serveIndex);
+app.get('/about', serveAbout);
+app.get('/api/hello', serveHello);
+app.get('/api/data', serveData);
 ```
 
-The first of these to learn about is the `res` object. It has a `send` method that allows us to send data back to the client or `sendFile` to send an HTML file.
+* To keep things simple, these controllers only make use of the `res` object 
+* The `res.send` and `res.sendFile` methods allow us to send different kinds of data. `res.sendStatus` lets us send just a status code with no data.
+* When sending files, the `__dirname` keyword returns the absolute path to the folder containing the current file.
+* The associated endpoints for each controller begin with `/` and are appended to the host:port
+  * e.g. `http://localhost:8080/about` will trigger the `serveAbout` controller
 
-> Note: we will use other methods to send files as well
+**<details><summary style="color: purple">Q: Why do you think the `serveHello` and `serveData` endpoints begin with `/api` while the other two endpoints do not?</summary>**
+> Typically, endpoints that serve data will begin with `/api` while endpoints that serve HTML do not.
+</details><br>
+
+**<details><summary style="color: purple">Q: What does `.get` mean? Why is it called that?</summary>**
+> These endpoints are designed to handle GET requests. If we wanted to assign controllers for endpoints that handle POST/PATCH/DELETE requests, we could use `app.post` or `app.patch` or `app.delete`.
+</details><br>
 
 ## Host & Ports
 
@@ -128,16 +179,7 @@ Just pick one that isn't being used!
 
 ## Challenge
 
-Setup:
-* Create a new repo in GitHub called `first-express-server`. Make sure to add a `.gitignore` template with `Node` selected.
-* Clone it down
-* Create a new folder called `server` and `cd` into it
-* Run `npm i express`
-* Run `npm i -g nodemon`
-* Create a `index.js` file
-* Run `nodemon index.js` to run your file. Each change you make will cause the file to re-run.
-
-In `index.js`, write a server application using Express that has at least 4 endpoints for GET requests:
+In `server/index.js`, write a server application using Express that has at least 4 endpoints for GET requests:
 * Two of the endpoints should return HTML (try making a file and sending the file!)
 * Two of the endpoints should return data (try sending an array of objects!)
 
