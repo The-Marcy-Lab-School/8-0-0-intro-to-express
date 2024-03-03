@@ -1,10 +1,24 @@
 # Intro to Express
 
-Welcome to the world of backend! In this lesson, we're going to learn the basics of Express and build and deploy a simple server application.
+Welcome to the world of backend! In this unit, we'll learn about:
 
+* **Backend** — the part of the application that the user can't access. For our purposes, this means a server application and a database.
+  * **Server Applications** — Application to receive requests and send back resources.
+    * **Express** — The npm package we'll use to build a server application.
+  * **Databases** — A place to put data and have it persist, even if the server turns off.
+    * **Postgres** — The type of database we'll use (tables, records, fields/properties).
+    * **SQL** — The language used to execute database commands.
+    * **Knex** — The npm package we'll use to send SQL queries to our Postgres database from our server application.
+  * **Model-Controller Design** — A framework for organizing the layers of software that make up the backend.
+
+By the end of this unit you will be able to build an application using the [React + Express + Auth Template](https://github.com/The-Marcy-Lab-School/react-express-auth).
+
+In this first lesson, we're going to learn the basics of Express and build and deploy a simple server application.
+
+**Table of Contents:**
 - [Terms](#terms)
 - [Setup](#setup)
-- [Overview](#overview)
+- [Client Server Interactions](#client-server-interactions)
   - [The Express `app`](#the-express-app)
 - [Endpoints and Controllers](#endpoints-and-controllers)
 - [Host \& Ports](#host--ports)
@@ -18,8 +32,8 @@ Welcome to the world of backend! In this lesson, we're going to learn the basics
 * **Express `app`** — an object that "listens" for requests and "routes" to the appropriate controller.
 * **Controller** — a callback function that parses a request and sends a response for a particular endpoint
 
-
 ## Setup
+
 * Create a new repo in GitHub called `first-express-server`. Make sure to add a `.gitignore` template with `Node` selected. Include a **README.md** file where you can take notes.
 * Clone it down
 * Create a new folder called `server` and `cd` into it
@@ -28,8 +42,7 @@ Welcome to the world of backend! In this lesson, we're going to learn the basics
 * Create a `index.js` file
 * Run `nodemon index.js` to run your file. Each change you make will cause the file to re-run. <kbd>Ctrl + C</kdb> to turn off the server.
 
-
-## Overview
+## Client Server Interactions
 
 So how do the client and server interact?
 
@@ -51,9 +64,9 @@ So how do the client and server interact?
 
 **<details><summary style="color: purple">Q: What are the responsibilities of a server?</summary>**
 
-- Sending HTML, CSS, and JS to a client
-- Parsing the information it receives
-- Sending data to a client (e.g. weather API)
+- Serving static files that live on the server (HTML, CSS, and JS files)
+- Fetching and serving data from a third-party API that requires an API key
+- Managing and serving data from the server's own database
 
 </details>
 
