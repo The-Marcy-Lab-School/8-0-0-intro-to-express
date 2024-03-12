@@ -25,7 +25,6 @@ In this first lesson, we're going to learn the basics of Express and build and d
 - [Endpoints and Controllers](#endpoints-and-controllers)
 - [Query Parameters](#query-parameters)
   - [Challenge](#challenge)
-- [Path Parameters (If Time Permits)](#path-parameters-if-time-permits)
 - [Listening: Host \& Ports](#listening-host--ports)
 
 ## Terms
@@ -223,28 +222,6 @@ const serveData = (req, res, next) => {
 ```
 
 </details><br>
-
-## Path Parameters (If Time Permits)
-
-**Path parameters** are used to identify a specific resource. 
-
-Path parameters can be accessed using the `req.params` object.
-
-```js
-// The serveGreeting controller looks at the request object to find
-// the value of the path parameter name
-const serveGreeting = (req, res, next) => {
-  res.send(`hello ${req.params.name}`)
-}
-
-// The `:name` syntax lets express know that `name` is a path parameter
-// For example, `/api/hello/ben` will trigger this endpoint with the value "ben"
-app.get('/api/hello/:name', serveGreeting);
-
-// Since this endpoint is less specific, it will NOT be invoked unless the
-// exact path `/api/hello` is requested
-app.get('/api/hello', serveHello);
-```
 
 ## Listening: Host & Ports
 
