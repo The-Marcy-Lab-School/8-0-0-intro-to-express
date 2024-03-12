@@ -10,6 +10,8 @@ Welcome to the world of backend! In this unit, we'll learn about:
     * **SQL** — The language used to execute database commands.
     * **Knex** — The npm package we'll use to send SQL queries to our Postgres database from our server application.
   * **Model-Controller Design** — A framework for organizing the layers of software that make up the backend.
+  * **Authentication** — Ensuring that only valid users can access protected content.
+  * **Authorization** — Ensuring that a given user has permission to modify content.
 
 By the end of this unit you will be able to build an application using the [React + Express + Auth Template](https://github.com/The-Marcy-Lab-School/react-express-auth).
 
@@ -17,12 +19,11 @@ In this first lesson, we're going to learn the basics of Express and build and d
 
 **Table of Contents:**
 - [Terms](#terms)
-- [Setup](#setup)
 - [Client Server Interactions](#client-server-interactions)
-  - [The Express `app`](#the-express-app)
+- [Express](#express)
+- [The `app` object is the hub of the server application](#the-app-object-is-the-hub-of-the-server-application)
 - [Endpoints and Controllers](#endpoints-and-controllers)
-- [Host \& Ports](#host--ports)
-- [Challenge](#challenge)
+- [Listening: Host \& Ports](#listening-host--ports)
 
 ## Terms
 
@@ -31,16 +32,6 @@ In this first lesson, we're going to learn the basics of Express and build and d
 * **Endpoint** — a specific URL path of a server that clients can "hit" (send requests to) to create/read/update/delete data. For example: `/api/data` or `/api/users/:id` 
 * **Express `app`** — an object that "listens" for requests and "routes" to the appropriate controller.
 * **Controller** — a callback function that parses a request and sends a response for a particular endpoint
-
-## Setup
-
-* Create a new repo in GitHub called `first-express-server`. Make sure to add a `.gitignore` template with `Node` selected. Include a **README.md** file where you can take notes.
-* Clone it down
-* Create a new folder called `server` and `cd` into it
-* Run `npm i express`
-* Run `npm i -g nodemon`
-* Create a `index.js` file
-* Run `nodemon index.js` to run your file. Each change you make will cause the file to re-run. <kbd>Ctrl + C</kdb> to turn off the server.
 
 ## Client Server Interactions
 
@@ -70,18 +61,31 @@ So how do the client and server interact?
 
 </details>
 
-### The Express `app`
+## Express
 
-The main export of Express is the `express` function which creates an object, often named `app` or `server`.
+To build our server application, we will use Express. According to their [docs](https://expressjs.com/):
+
+> Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
+
+To use express, we start by installing it
+
+```sh
+npm i express
+```
+
+The main export of Express is the `express` function which creates an object, often named `app`.
 
 ```js
+// index.js
 const express = require('express');
 const app = express();
 ```
 
-This `app` object is the hub of the server application. It will:
-* **Listen:** Wait for incoming requests and...
-* **Route:** Direct each request to a **controller** based on the specific **endpoint** of the request
+## The `app` object is the hub of the server application
+
+This `app` object lets us define our server's behavior. It:
+* **Listens** — it waits for incoming requests and...
+* **Routes** — it directs each request to a **controller** based on the specific **endpoint** of the request
 
 Here is a simple example. For now, just focus on the high-level structure of the application. Look for **controllers**, **endpoints**, and where the app "listens".
 
@@ -164,7 +168,17 @@ app.get('/api/data', serveData);
 > These endpoints are designed to handle GET requests. If we wanted to assign controllers for endpoints that handle POST/PATCH/DELETE requests, we could use `app.post` or `app.patch` or `app.delete`.
 </details><br>
 
-## Host & Ports
+## Listening: Host & Ports
+
+The last lines of code "turn on" the server. That is, they make the server start listening for requests.
+
+```js
+const port = 8080;
+app.listen(port, () => console.log(`listening at http://localhost:${port}`)); 
+```
+
+* The first argument defines the **port** number
+* The second argument is a callback that gets executed when the server starts listening. It is often used to print out the host and port.
 
 ![](images/host-port.png)
 
@@ -189,19 +203,3 @@ Which port should you use? It doesn't really matter, but here are some ones that
 Just pick one that isn't being used! 
 
 > How do you know which ones aren't being used? Your computer will likely tell you if one is currently in use — just use a different one (or kill the process that is currently using that port).
-
-## Challenge
-
-In `server/index.js`, write a server application using Express that has at least 4 endpoints for GET requests:
-* Two of the endpoints should return HTML (try making a file and sending the file!)
-* Two of the endpoints should return data (try sending an array of objects!)
-
-It is entirely up to *you* to decide which endpoints your server makes available. However, it is a best practice to:
-* start endpoints that provided data with `/api`
-* start endpoints that provide HTML with `/`
-
-When you've built your server, visit http://localhost:8080 (or whatever port number you chose) and test out your server!
-
-When you're done, push your code to github and [follow these steps to deploy using Render](https://github.com/The-Marcy-Lab-School/render-deployment-instructions).
-
-[Here is an example of a deployed server!](https://github.com/benspector-mls/first-express-server-f23-test)
