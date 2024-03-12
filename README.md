@@ -23,6 +23,8 @@ In this first lesson, we're going to learn the basics of Express and build and d
 - [Express](#express)
 - [The `app` object is the hub of the server application](#the-app-object-is-the-hub-of-the-server-application)
 - [Endpoints and Controllers](#endpoints-and-controllers)
+- [Query Parameters](#query-parameters)
+- [Path Parameters (If Time Permits)](#path-parameters-if-time-permits)
 - [Listening: Host \& Ports](#listening-host--ports)
 
 ## Terms
@@ -32,6 +34,7 @@ In this first lesson, we're going to learn the basics of Express and build and d
 * **Endpoint** — a specific URL path of a server that clients can "hit" (send requests to) to create/read/update/delete data. For example: `/api/data` or `/api/users/:id` 
 * **Express `app`** — an object that "listens" for requests and "routes" to the appropriate controller.
 * **Controller** — a callback function that parses a request and sends a response for a particular endpoint
+* **Query parameters** — a portion of a URL used to filter and sort the requested data. They are appended to the end of a URL using the syntax `?queryParam=value`. 
 
 ## Client Server Interactions
 
@@ -100,8 +103,9 @@ const serveIndex = (req, res, next) => {
 const serveAbout = (req, res, next) => {
   res.send('<h1>About</h1>');
 }
+const data = [ { name: 'ben' }, { name: 'zo' }, { name: 'carmen' }];
 const serveData = (req, res, next) => {
-  res.send([ { name: 'ben' }, { name: 'zo' }]);
+  res.send(data);
 }
 const serveHello = (req, res, next) => {
   res.send('hello');
@@ -140,8 +144,9 @@ const serveIndex = (req, res, next) => {
 const serveAbout = (req, res, next) => {
   res.send('<h1>About</h1>');
 }
+const data = [ { name: 'ben' }, { name: 'zo' }, { name: 'carmen' }];
 const serveData = (req, res, next) => {
-  res.send([ { name: 'ben' }, { name: 'zo' }]);
+  res.send(data);
 }
 const serveHello = (req, res, next) => {
   res.send('hello');
@@ -167,6 +172,59 @@ app.get('/api/data', serveData);
 **<details><summary style="color: purple">Q: What does `.get` mean? Why is it called that?</summary>**
 > These endpoints are designed to handle GET requests. If we wanted to assign controllers for endpoints that handle POST/PATCH/DELETE requests, we could use `app.post` or `app.patch` or `app.delete`.
 </details><br>
+
+## Query Parameters
+
+Our controllers feel kind of stiff. Let's make them more dynamic using query parameters!
+
+Right now, if I request http://localhost:8080/api/hello, the `serveHello` controller is triggered which sends back the string `'hello'`.
+
+```js
+const serveHello = (req, res, next) => {
+  res.send(`hello`);
+}
+```
+
+**Query parameters** are a portion of an endpoint URL, often used to filter and sort the requested data. They are appended to the end of a URL using the syntax `?queryParam=value`. 
+
+* For example, if I send a request to http://localhost:8080/api/hello?name=ben then I am adding the query parameter `?name=ben` where `name` is the query parameter and `ben` is the value.
+* We can access the value of the `name` query parameter using `req.query.name`
+
+```js
+const serveHello = (req, res, next) => {
+  const name = req.query.name || "stranger";
+  res.send(`hello ${name}`);
+}
+app.get('/api/hello', serveHello);
+```
+
+* In this example, we get the `?name='ben'` value using `req.query.name`
+* If no name is provided, `req.query.name` will be `undefined` so we use `"stranger"` as a backup value.
+* Now,
+  * http://localhost:8080/api/hello?name=ben will send back `hello ben`
+  * http://localhost:8080/api/hello will send back `hello stranger`
+
+## Path Parameters (If Time Permits)
+
+**Path parameters** are used to identify a specific resource. 
+
+Path parameters can be accessed using the `req.params` object.
+
+```js
+// The serveGreeting controller looks at the request object to find
+// the value of the path parameter name
+const serveGreeting = (req, res, next) => {
+  res.send(`hello ${req.params.name}`)
+}
+
+// The `:name` syntax lets express know that `name` is a path parameter
+// For example, `/api/hello/ben` will trigger this endpoint with the value "ben"
+app.get('/api/hello/:name', serveGreeting);
+
+// Since this endpoint is less specific, it will NOT be invoked unless the
+// exact path `/api/hello` is requested
+app.get('/api/hello', serveHello);
+```
 
 ## Listening: Host & Ports
 
