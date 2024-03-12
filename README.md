@@ -24,6 +24,7 @@ In this first lesson, we're going to learn the basics of Express and build and d
 - [The `app` object is the hub of the server application](#the-app-object-is-the-hub-of-the-server-application)
 - [Endpoints and Controllers](#endpoints-and-controllers)
 - [Query Parameters](#query-parameters)
+  - [Challenge](#challenge)
 - [Path Parameters (If Time Permits)](#path-parameters-if-time-permits)
 - [Listening: Host \& Ports](#listening-host--ports)
 
@@ -203,6 +204,25 @@ app.get('/api/hello', serveHello);
 * Now,
   * http://localhost:8080/api/hello?name=ben will send back `hello ben`
   * http://localhost:8080/api/hello will send back `hello stranger`
+
+### Challenge
+
+How can we modify the `serveData` function so that it filters the array of objects by the `.name` property using a `?filter=value` query parameter?
+
+**<details><summary style="color: purple">Solution</summary>**
+
+```js
+const serveData = (req, res, next) => {
+  // if no filter is provided, req.query.filter will be undefined. use "" as a backup value
+  const filterTerm = req.query.filter || "";
+  // filter the gifs.data array using the title (see the gifs.json file) 
+  const filteredData = gifs.data.filter((gif) => gif.title.toLowerCase().includes(filterTerm));
+  // send back the filteredData
+  res.send(filteredData);
+}
+```
+
+</details><br>
 
 ## Path Parameters (If Time Permits)
 
