@@ -18,23 +18,24 @@ By the end of this unit you will be able to build an application using the [Reac
 In this first lesson, we're going to learn the basics of Express and build and deploy a simple server application.
 
 **Table of Contents:**
-- [Terms](#terms)
-- [Client Server Interactions](#client-server-interactions)
-- [Express](#express)
-- [The `app` object is the hub of the server application](#the-app-object-is-the-hub-of-the-server-application)
-- [Endpoints and Controllers](#endpoints-and-controllers)
-- [Query Parameters](#query-parameters)
-  - [Challenge](#challenge)
-- [Listening: Host \& Ports](#listening-host--ports)
+
+* [Terms](#terms)
+* [Client Server Interactions](#client-server-interactions)
+* [Express](#express)
+* [The `app` object is the hub of the server application](#the-app-object-is-the-hub-of-the-server-application)
+* [Endpoints and Controllers](#endpoints-and-controllers)
+* [Query Parameters](#query-parameters)
+  * [Challenge](#challenge)
+* [Listening: Host \& Ports](#listening-host--ports)
 
 ## Terms
 
 * **Server Application** — an application that listens for requests and sends responses.
 * **Host** and **Port** - the address of a server application
-* **Endpoint** — a specific URL path of a server that clients can "hit" (send requests to) to create/read/update/delete data. For example: `/api/data` or `/api/users/:id` 
+* **Endpoint** — a specific URL path of a server that clients can "hit" (send requests to) to create/read/update/delete data. For example: `/api/data` or `/api/users/:id`
 * **Express `app`** — an object that "listens" for requests and "routes" to the appropriate controller.
 * **Controller** — a callback function that parses a request and sends a response for a particular endpoint
-* **Query parameters** — a portion of a URL used to filter and sort the requested data. They are appended to the end of a URL using the syntax `?queryParam=value`. 
+* **Query parameters** — a portion of a URL used to filter and sort the requested data. They are appended to the end of a URL using the syntax `?queryParam=value`.
 
 ## Client Server Interactions
 
@@ -45,22 +46,22 @@ So how do the client and server interact?
 1. The controller parses the request and sends a **response**
 1. The client receives the response and renders the data!
   
-![](./images/express-diagram-simple.svg)
+![express diagram](./images/express-diagram-simple.svg)
 
 **<details><summary style="color: purple">Q: What are the responsibilities of a client?</summary>**
 
-- Rendering HTML, CSS, and JS
-- Request information from a server (get requests)
-- Providing information to a server (post/patch/delete requests)
-- Reading data received from a server
+* Rendering HTML, CSS, and JS
+* Request information from a server (get requests)
+* Providing information to a server (post/patch/delete requests)
+* Reading data received from a server
 
 </details>
 
 **<details><summary style="color: purple">Q: What are the responsibilities of a server?</summary>**
 
-- Serving static files that live on the server (HTML, CSS, and JS files)
-- Fetching and serving data from a third-party API that requires an API key
-- Managing and serving data from the server's own database
+* Serving static files that live on the server (HTML, CSS, and JS files)
+* Fetching and serving data from a third-party API that requires an API key
+* Managing and serving data from the server's own database
 
 </details>
 
@@ -87,6 +88,7 @@ const app = express();
 ## The `app` object is the hub of the server application
 
 This `app` object lets us define our server's behavior. It:
+
 * **Listens** — it waits for incoming requests and...
 * **Routes** — it directs each request to a **controller** based on the specific **endpoint** of the request
 
@@ -131,10 +133,21 @@ Let's look closer at how to make a controller.
 
 ## Endpoints and Controllers
 
-Controllers are callbacks invoked by the `app` when the associated endpoint is hit. They are ALWAYS invoked with three values:
-* `req` — an object with data about the incoming request
-* `res` — an object with functions for sending a response
-* `next` — a function to execute the next controller (we'll learn more about this soon)
+Controllers in Express.js are JavaScript functions responsible for handling the logic associated with specific endpoints. When a client makes a request to a particular endpoint, Express invokes the corresponding controller to process the request and generate a response.
+
+Key points about controllers:
+
+* Invocation: Controllers are invoked by Express.js when a matching route (endpoint) is requested by a client.
+
+* Responsibilities: Controllers handle various tasks, including interacting with databases, processing data, and generating responses based on the request.
+
+* Function Parameters: Controllers typically receive three parameters:
+
+  * req: An object containing information about the incoming request, such as headers, parameters, and body.
+  * res: An object with functions for sending a response to the client, such as res.send() or res.json().
+  * next: A function used to pass control to the next middleware function in the request-response cycle. It is commonly used in middleware to delegate processing to subsequent functions.
+
+An endpoint is a unique URL path on a server that clients can access to interact with resources or perform operations. It represents a location within a web service or API where HTTP requests are sent, typically using different methods like GET, POST, PUT, DELETE, etc. Examples include /api/data or /api/users/:id, where :id represents a dynamic parameter.
 
 ```js
 // controllers
@@ -159,7 +172,7 @@ app.get('/api/hello', serveHello);
 app.get('/api/data', serveData);
 ```
 
-* To keep things simple, these controllers only make use of the `res` object 
+* To keep things simple, these controllers only make use of the `res` object
 * The `res.send` and `res.sendFile` methods allow us to send different kinds of data. `res.sendStatus` lets us send just a status code with no data.
 * When sending files, the `__dirname` keyword returns the absolute path to the folder containing the current file.
 * The associated endpoints for each controller begin with `/` and are appended to the host:port
@@ -185,7 +198,7 @@ const serveHello = (req, res, next) => {
 }
 ```
 
-**Query parameters** are a portion of an endpoint URL, often used to filter and sort the requested data. They are appended to the end of a URL using the syntax `?queryParam=value`. 
+**Query parameters** are a portion of an endpoint URL, often used to filter and sort the requested data. They are appended to the end of a URL using the syntax `?queryParam=value`.
 
 * For example, if I send a request to http://localhost:8080/api/hello?name=ben then I am adding the query parameter `?name=ben` where `name` is the query parameter and `ben` is the value.
 * We can access the value of the `name` query parameter using `req.query.name`
@@ -235,12 +248,12 @@ app.listen(port, () => console.log(`listening at http://localhost:${port}`));
 * The first argument defines the **port** number
 * The second argument is a callback that gets executed when the server starts listening. It is often used to print out the host and port.
 
-![](images/host-port.png)
+![host port](images/host-port.png)
 
 Host is like our home address.
 
-* `localhost` is a hostname that refers to the current device used to access it. 
-* `localhost` is an alias for `127.0.0.1` which is the standard address used. 
+* `localhost` is a hostname that refers to the current device used to access it.
+* `localhost` is an alias for `127.0.0.1` which is the standard address used.
 * `localhost === 127.0.0.1`
 
 Ports are the "front doors" of our application. (There are are a lot of doors!)
@@ -248,6 +261,7 @@ Ports are the "front doors" of our application. (There are are a lot of doors!)
 * `:8080` is considered as a different "door" from `:5500`
 
 Which port should you use? It doesn't really matter, but here are some ones that our instructors like to use and some standards that are used:
+
 * `8080` (What I use)
 * `4321` (Mike's favorite because its fun)
 * `3000` (What other people use)
@@ -255,6 +269,6 @@ Which port should you use? It doesn't really matter, but here are some ones that
 * `80` (Standard unencrypted HTTP port)
 * `443` (Standard encrypted HTTPS port)
 
-Just pick one that isn't being used! 
+Just pick one that isn't being used!
 
 > How do you know which ones aren't being used? Your computer will likely tell you if one is currently in use — just use a different one (or kill the process that is currently using that port).
