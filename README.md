@@ -98,22 +98,22 @@ Here is a simple example. For now, just focus on the high-level structure of the
 const express = require('express');
 const app = express();
 
-// controllers
+// controllers can send files, raw HTML, and data
 const serveIndex = (req, res, next) => {
   res.sendFile(__dirname + '/index.html');
 }
 const serveAbout = (req, res, next) => {
   res.send('<h1>About</h1>');
 }
-const data = [ { name: 'ben' }, { name: 'zo' }, { name: 'carmen' }];
 const serveData = (req, res, next) => {
+  const data = [{ name: 'ben' }, { name: 'zo' }, { name: 'carmen' }];
   res.send(data);
 }
 const serveHello = (req, res, next) => {
   res.send('hello');
 }
 
-// endpoints
+// endpoints invoke a controller for a particular endpoint
 app.get('/', serveIndex);
 app.get('/about', serveAbout);
 app.get('/api/hello', serveHello);
