@@ -105,12 +105,12 @@ const serveIndex = (req, res, next) => {
 const serveAbout = (req, res, next) => {
   res.send('<h1>About</h1>');
 }
+const serveHello = (req, res, next) => {
+  res.send('hello');
+}
 const serveData = (req, res, next) => {
   const data = [{ name: 'ben' }, { name: 'zo' }, { name: 'carmen' }];
   res.send(data);
-}
-const serveHello = (req, res, next) => {
-  res.send('hello');
 }
 
 // endpoints
@@ -164,12 +164,12 @@ const serveIndex = (req, res, next) => {
 const serveAbout = (req, res, next) => {
   res.send('<h1>About</h1>');
 }
+const serveHello = (req, res, next) => {
+  res.send('hello');
+}
 const serveData = (req, res, next) => {
   const data = [{ name: 'ben' }, { name: 'zo' }, { name: 'carmen' }];
   res.send(data);
-}
-const serveHello = (req, res, next) => {
-  res.send('hello');
 }
 
 app.get('/', serveIndex);
