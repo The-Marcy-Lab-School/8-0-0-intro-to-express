@@ -143,8 +143,8 @@ Key points about controllers:
 
 * Function Parameters: Controllers typically receive three parameters:
 
-  * req: An object containing information about the incoming request, such as headers, parameters, and body.
-  * res: An object with functions for sending a response to the client, such as res.send() or res.json().
+  * req: Short for request, is an object containing information about the incoming request, such as headers, parameters, and body.
+  * res: short for response, is An object with functions for sending a response to the client, such as res.send() or res.json().
   * next: A function used to pass control to the next middleware function in the request-response cycle. It is commonly used in middleware to delegate processing to subsequent functions.
 
 An endpoint is a unique URL path on a server that clients can access to interact with resources or perform operations. It represents a location within a web service or API where HTTP requests are sent, typically using different methods like GET, POST, PUT, DELETE, etc. Examples include /api/data or /api/users/:id, where :id represents a dynamic parameter.
@@ -172,8 +172,16 @@ app.get('/api/hello', serveHello);
 app.get('/api/data', serveData);
 ```
 
-* To keep things simple, these controllers only make use of the `res` object
-* The `res.send` and `res.sendFile` methods allow us to send different kinds of data. `res.sendStatus` lets us send just a status code with no data.
+* To keep things simple, these controllers only make use of the `res` object.
+* The `res.send` and `res.sendFile` methods allow us to send different kinds of data to the client. `res.sendStatus` lets us send just a status code with no data.
+
+>Status Codes:
+> * A status code is a three-digit number returned by a server in response to a client's request, indicating the outcome of the request, such as success, failure, or other conditions.
+>   * 200 - Success
+>   * 300 - Redirect
+>   * 400 - Client Error
+>   * 500 - Server Error
+
 * When sending files, the `__dirname` keyword returns the absolute path to the folder containing the current file.
 * The associated endpoints for each controller begin with `/` and are appended to the host:port
   * e.g. `http://localhost:8080/about` will trigger the `serveAbout` controller
