@@ -95,6 +95,8 @@ This `app` object lets us define our server's behavior. It:
 
 Here is a simple example. For now, just focus on the high-level structure of the application. Look for **controllers**, **endpoints**, and where the app "listens".
 
+Copy and paste this into an `index.js` file and run it with `node index.js` and see if you can figure out how it works!
+
 ```js
 const express = require('express');
 const app = express();
