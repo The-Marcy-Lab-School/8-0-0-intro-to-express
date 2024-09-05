@@ -19,15 +19,16 @@ In this first lesson, we're going to learn the basics of Express and build and d
 
 **Table of Contents:**
 
-* [Terms](#terms)
-* [Client Server Interactions](#client-server-interactions)
-* [Express](#express)
-* [The `app` object is the hub of the server application](#the-app-object-is-the-hub-of-the-server-application)
-* [Endpoints](#endpoints)
-* [Controllers](#controllers)
-* [Query Parameters](#query-parameters)
-  * [Challenge](#challenge)
-* [Listening: Host \& Ports](#listening-host--ports)
+- [Terms](#terms)
+- [Client Server Interactions](#client-server-interactions)
+- [Express](#express)
+- [The `app` object is the hub of the server application](#the-app-object-is-the-hub-of-the-server-application)
+- [Endpoints](#endpoints)
+- [Controllers](#controllers)
+- [Query Parameters](#query-parameters)
+  - [Accessing Query Parameter Values in a Controller](#accessing-query-parameter-values-in-a-controller)
+  - [Challenge](#challenge)
+- [Listening: Host \& Ports](#listening-host--ports)
 
 ## Terms
 
@@ -198,32 +199,55 @@ app.get('/api/data', serveData);
 
 Our controllers feel stiff. Let's make them more dynamic using query parameters!
 
-Right now, if I request http://localhost:8080/api/hello, the `serveHello` controller is triggered which sends back the string `'hello'`.
+Right now, if I request http://localhost:8080/api/hello, the `serveHello` controller is triggered which sends back the string `'hello'`. And it will _always_ send the string `'hello'`
 
 ```js
 const serveHello = (req, res, next) => {
-  res.send(`hello`);
+  res.send('hello');
 }
 ```
 
-**Query parameters** are a portion of an endpoint URL, often used to filter and sort the requested data. They are appended to the end of a URL using the syntax `?queryParam=value`.
+**Query parameters** are added to the end of request URL to tell the server to modify the requested data in some way. 
 
-* For example, if I send a request to http://localhost:8080/api/hello?name=ben then I add the query parameter `?name=ben` where `name` is the query parameter and `ben` is the value.
-* We can access the value of the `name` query parameter using `req.query.name`
+They are appended to the end of a request URL starting with a `?` and followed by `key=value` pairs separated by `&`s:
+
+http://host/api/endpoint<b>?param1=value&param2=value</b>
+
+**<details><summary style="color: purple">Q: In the example above where we send the request to `http://localhost:8080/api/hello`, how would we add query parameters to specify a first and last name that we want the server to say hello to?</summary>**
+
+> If a client wants to send a request to the `/api/hello` endpoint and add query parameters for a first and last name, the full URL could be:
+> 
+> http://localhost:8080/api/hello<b>?first=jane&last=doe</b>. 
+> 
+> In this example, there are two parameters named `first` and `last` with the values `jane` and `doe`.
+
+</details><br>
+
+### Accessing Query Parameter Values in a Controller
+
+In the server code, we can access the value of query parameters using `req.query` object. 
+
+Each `key=value` query parameter provided in the request URL will show up as a property on the `req.query` object:
 
 ```js
 const serveHello = (req, res, next) => {
-  const name = req.query.name || "stranger";
-  res.send(`hello ${name}`);
+  const first = req.query.first;
+  const last = req.query.last;
+  if (first && !last) {
+    return res.send(`hello ${first} ${last}!`);
+  }
+  res.send('hello')
 }
+
 app.get('/api/hello', serveHello);
 ```
 
-* In this example, we get the `?name='ben'` value using `req.query.name`
-* If no name is provided, `req.query.name` will be `undefined` so we use `"stranger"` as a backup value.
+* In this example, we get the `first` value using `req.query.first` and the `last` value using `req.query.last`
+* Before sending a response, we make sure to check that both query parameters are provided, otherwise we just send `'hello'`.
 * Now,
-  * http://localhost:8080/api/hello?name=ben will send back `hello ben`
-  * http://localhost:8080/api/hello will send back `hello stranger`
+  * http://localhost:8080/api/hello?first=ben&last=spector will send back `hello ben spector`
+  * http://localhost:8080/api/hello?first=ben will send back `hello`
+  * http://localhost:8080/api/hello will send back `hello`
 
 ### Challenge
 
