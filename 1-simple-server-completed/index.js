@@ -1,31 +1,35 @@
-// Imports:
-const gifs = require('./gifs.json'); // our mock data
-const express = require('express');   // used to configure the express server
-
-// The `app` object configures the server
+const express = require('express');
 const app = express();
+const gifs = require('./gifs.json');
 
-// Controllers:
-const serveIndex = (req, res, next) => res.sendFile(__dirname + '/index.html');
-const serveAbout = (req, res, next) => res.send('<h1>About</h1>');
+// controllers
+const serveHello = (req, res, next) => {
+  console.log(req.query); // { first: "ben", last: "spector" }
+
+  const { first, last } = req.query;
+  if (!first || !last) {
+    return res.send(`hello stranger!`);
+  }
+  res.send(`hello ${first} ${last}!`);
+}
+
 const serveData = (req, res, next) => {
-  // if no filter is provided, req.query.filter will be undefined. use "" as a backup value
-  const filterTerm = req.query.filter || "";
-  // filter the gifs.data array using the title (see the gifs.json file) 
-  const filteredData = gifs.data.filter((gif) => gif.title.toLowerCase().includes(filterTerm));
-  // send back the filteredData
+  const filter = req.query.filter
+  const data = [{ name: 'ben' }, { name: 'zo' }, { name: 'carmen' }];
+
+  if (!filter) res.send(data);
+  const filteredData = data.filter((item) => item.name === filter);
   res.send(filteredData);
 }
-const serveHello = (req, res, next) => {
-  const name = req.query.name || "stranger";
-  res.send(`hello ${name}`);
+
+const serveStatus = (req, res, next) => {
+  res.sendStatus(200);
 }
 
-// Routes:
-app.get('/', serveIndex);
-app.get('/about', serveAbout);
+// endpoints
 app.get('/api/hello', serveHello);
 app.get('/api/data', serveData);
+app.get('/api/ping', serveStatus);
 
 // Once you've configured everything, start listening!
 const port = 8080;
